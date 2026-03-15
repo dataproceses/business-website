@@ -391,6 +391,31 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Trusted Partners Bar */}
+      <section className="bg-[#1a1a1a] py-6 border-b border-white/5 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+            <div className="flex items-center gap-4 md:gap-8">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" className="h-6 md:h-8" referrerPolicy="no-referrer" />
+              <div className="w-[1px] h-8 bg-white/20"></div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" className="h-6 md:h-8 invert" referrerPolicy="no-referrer" />
+              <div className="w-[1px] h-8 bg-white/20"></div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" className="h-6 md:h-8 invert" referrerPolicy="no-referrer" />
+              <div className="w-[1px] h-8 bg-white/20"></div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" className="h-6 md:h-8" referrerPolicy="no-referrer" />
+              <div className="w-[1px] h-8 bg-white/20 hidden sm:block"></div>
+            </div>
+            <div className="flex items-center gap-4 md:gap-8">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Slack_Technologies_Logo.svg" alt="Slack" className="h-6 md:h-8" referrerPolicy="no-referrer" />
+              <div className="w-[1px] h-8 bg-white/20"></div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix" className="h-6 md:h-8" referrerPolicy="no-referrer" />
+              <div className="w-[1px] h-8 bg-white/20"></div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/PayPal_logo.svg" alt="PayPal" className="h-6 md:h-8" referrerPolicy="no-referrer" />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* About Section */}
       <section className="py-24 bg-white min-h-screen">
         <div id="about" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
