@@ -1,0 +1,246 @@
+{
+  "entities": {
+    "Service": {
+      "title": "Service",
+      "description": "A construction service offered by the company.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The name of the service."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the service."
+        },
+        "icon": {
+          "type": "string",
+          "description": "The name of the Lucide icon to use."
+        },
+        "order": {
+          "type": "number",
+          "description": "The display order of the service."
+        }
+      },
+      "required": ["title", "description", "icon", "order"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A construction project completed by the company.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The name of the project."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the project (e.g., Commercial, Residential, Civil)."
+        },
+        "image": {
+          "type": "string",
+          "description": "The URL of the project image."
+        },
+        "order": {
+          "type": "number",
+          "description": "The display order of the project."
+        }
+      },
+      "required": ["title", "category", "image", "order"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A contact message sent by a user from the website.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the sender."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the sender."
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject of the message."
+        },
+        "message": {
+          "type": "string",
+          "description": "The content of the message."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The ISO string timestamp of when the message was sent."
+        },
+        "read": {
+          "type": "boolean",
+          "description": "Whether the message has been read."
+        }
+      },
+      "required": ["name", "email", "subject", "message", "createdAt", "read"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "A client testimonial or review.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client."
+        },
+        "role": {
+          "type": "string",
+          "description": "The role or company of the client."
+        },
+        "content": {
+          "type": "string",
+          "description": "The testimonial text."
+        },
+        "rating": {
+          "type": "number",
+          "description": "The star rating (1-5)."
+        },
+        "avatar": {
+          "type": "string",
+          "description": "The URL of the client's avatar image."
+        },
+        "order": {
+          "type": "number",
+          "description": "The display order of the testimonial."
+        }
+      },
+      "required": ["name", "role", "content", "rating", "order"]
+    },
+    "HeroSettings": {
+      "title": "HeroSettings",
+      "description": "Settings for the main hero section on the home page.",
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "description": "The URL of the background image."
+        },
+        "titlePart1": {
+          "type": "string",
+          "description": "The first part of the main title."
+        },
+        "titlePart2": {
+          "type": "string",
+          "description": "The highlighted/stroked part of the main title."
+        },
+        "titlePart3": {
+          "type": "string",
+          "description": "The third part of the main title."
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "The subtitle text below the main title."
+        }
+      },
+      "required": ["image", "titlePart1", "titlePart2", "titlePart3", "subtitle"]
+    },
+    "AboutSettings": {
+      "title": "AboutSettings",
+      "description": "Settings for the about section on the home page.",
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string",
+          "description": "The URL of the about section image."
+        }
+      },
+      "required": ["image"]
+    },
+    "CtaSettings": {
+      "title": "CtaSettings",
+      "description": "Settings for the CTA section on the home page.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the CTA section."
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "The subtitle of the CTA section."
+        },
+        "buttonText": {
+          "type": "string",
+          "description": "The text for the CTA button."
+        },
+        "buttonLink": {
+          "type": "string",
+          "description": "The link for the CTA button."
+        }
+      },
+      "required": ["title", "subtitle", "buttonText", "buttonLink"]
+    },
+    "StatsSettings": {
+      "title": "StatsSettings",
+      "description": "Settings for the Stats section on the home page.",
+      "type": "object",
+      "properties": {
+        "stat1Number": { "type": "string" },
+        "stat1Label": { "type": "string" },
+        "stat2Number": { "type": "string" },
+        "stat2Label": { "type": "string" },
+        "stat3Number": { "type": "string" },
+        "stat3Label": { "type": "string" },
+        "stat4Number": { "type": "string" },
+        "stat4Label": { "type": "string" }
+      },
+      "required": ["stat1Number", "stat1Label", "stat2Number", "stat2Label", "stat3Number", "stat3Label", "stat4Number", "stat4Label"]
+    }
+  },
+  "firestore": {
+    "/services/{serviceId}": {
+      "schema": {
+        "$ref": "#/entities/Service"
+      },
+      "description": "Stores the list of services offered."
+    },
+    "/projects/{projectId}": {
+      "schema": {
+        "$ref": "#/entities/Project"
+      },
+      "description": "Stores the list of completed projects."
+    },
+    "/messages/{messageId}": {
+      "schema": {
+        "$ref": "#/entities/Message"
+      },
+      "description": "Stores the contact messages received from the website."
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": {
+        "$ref": "#/entities/Testimonial"
+      },
+      "description": "Stores the client testimonials."
+    },
+    "/settings/hero": {
+      "schema": {
+        "$ref": "#/entities/HeroSettings"
+      },
+      "description": "Stores the hero section settings."
+    },
+    "/settings/about": {
+      "schema": {
+        "$ref": "#/entities/AboutSettings"
+      },
+      "description": "Stores the about section settings."
+    },
+    "/settings/cta": {
+      "schema": {
+        "$ref": "#/entities/CtaSettings"
+      },
+      "description": "Stores the CTA section settings."
+    },
+    "/settings/stats": {
+      "schema": {
+        "$ref": "#/entities/StatsSettings"
+      },
+      "description": "Stores the Stats section settings."
+    }
+  }
+}

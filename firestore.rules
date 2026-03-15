@@ -1,0 +1,180 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: services
+    // Document ID: auto-generated
+    // Fields:
+    //   - title: string (required, < 100 chars)
+    //   - description: string (required, < 500 chars)
+    //   - icon: string (required, < 50 chars)
+    //   - order: number (required)
+    //
+    // Collection: projects
+    // Document ID: auto-generated
+    // Fields:
+    //   - title: string (required, < 100 chars)
+    //   - category: string (required, < 50 chars)
+    //   - image: string (required, < 1000 chars)
+    //   - order: number (required)
+    //
+    // Collection: messages
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required, < 100 chars)
+    //   - email: string (required, < 100 chars)
+    //   - subject: string (required, < 200 chars)
+    //   - message: string (required, < 2000 chars)
+    //   - createdAt: string (required, < 50 chars)
+    //   - read: boolean (required)
+    //
+    // Collection: settings
+    // Document ID: autoreply
+    // Fields:
+    //   - enabled: boolean
+    //   - subject: string
+    //   - body: string
+    //
+    // Collection: mail
+    // Document ID: auto-generated
+    // Fields:
+    //   - to: string
+    //   - message: map
+    //   - createdAt: string
+    //
+    // Collection: testimonials
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required, < 100 chars)
+    //   - role: string (required, < 100 chars)
+    //   - content: string (required, < 1000 chars)
+    //   - rating: number (required)
+    //   - avatar: string (optional, < 1000 chars)
+    //   - order: number (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.email == 'tarikukebede200@gmail.com' && request.auth.token.email_verified == true;
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidString(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+        request.resource.data[field].size() >= minLen &&
+        request.resource.data[field].size() <= maxLen;
+    }
+
+    function isValidOptionalString(field, minLen, maxLen) {
+      return !(field in request.resource.data) ||
+             (request.resource.data[field] is string &&
+              request.resource.data[field].size() >= minLen &&
+              request.resource.data[field].size() <= maxLen);
+    }
+
+    function isValidNumber(field) {
+      return request.resource.data[field] is number;
+    }
+
+    function isValidBoolean(field) {
+      return request.resource.data[field] is bool;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidService() {
+      return hasOnlyAllowedFields(['title', 'description', 'icon', 'order']) &&
+             isValidString('title', 1, 100) &&
+             isValidString('description', 1, 500) &&
+             isValidString('icon', 1, 50) &&
+             isValidNumber('order');
+    }
+
+    function isValidProject() {
+      return hasOnlyAllowedFields(['title', 'category', 'image', 'order']) &&
+             isValidString('title', 1, 100) &&
+             isValidString('category', 1, 50) &&
+             isValidString('image', 1, 1000000) &&
+             isValidNumber('order');
+    }
+
+    function isValidMessage() {
+      return hasOnlyAllowedFields(['name', 'email', 'subject', 'message', 'createdAt', 'read']) &&
+             isValidString('name', 1, 100) &&
+             isValidString('email', 1, 100) &&
+             isValidOptionalString('subject', 0, 200) &&
+             isValidString('message', 1, 2000) &&
+             isValidString('createdAt', 1, 50) &&
+             isValidBoolean('read');
+    }
+
+    function isValidTestimonial() {
+      return hasOnlyAllowedFields(['name', 'role', 'content', 'rating', 'order', 'avatar']) &&
+             isValidString('name', 1, 100) &&
+             isValidString('role', 0, 100) &&
+             isValidString('content', 1, 1000) &&
+             isValidNumber('rating') &&
+             isValidNumber('order') &&
+             isValidOptionalString('avatar', 0, 1000);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /services/{serviceId} {
+      allow read: if true; // Publicly readable
+      allow create: if isAdmin() && isValidService();
+      allow update: if isAdmin() && isValidService();
+      allow delete: if isAdmin();
+    }
+
+    match /projects/{projectId} {
+      allow read: if true; // Publicly readable
+      allow create: if isAdmin() && isValidProject();
+      allow update: if isAdmin() && isValidProject();
+      allow delete: if isAdmin();
+    }
+
+    match /messages/{messageId} {
+      allow read: if isAdmin();
+      allow create: if isValidMessage(); // Anyone can send a message
+      allow update: if isAdmin() && isValidMessage();
+      allow delete: if isAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /mail/{mailId} {
+      allow create: if true; // Anyone can trigger an email to themselves
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidTestimonial();
+      allow update: if isAdmin() && isValidTestimonial();
+      allow delete: if isAdmin();
+    }
+  }
+}
