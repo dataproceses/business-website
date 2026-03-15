@@ -18,9 +18,10 @@ import {
   Quote,
   Star
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { collection, onSnapshot, query, orderBy, addDoc, doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { db, auth, logout } from '../firebase';
 import { GoogleGenAI } from '@google/genai';
 
 const fadeIn = {
@@ -39,6 +40,8 @@ const staggerContainer = {
 };
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<any>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [services, setServices] = useState<any[]>([]);
@@ -77,6 +80,13 @@ export default function Home() {
     stat3Number: '120+', stat3Label: 'Expert Workers',
     stat4Number: '100%', stat4Label: 'Client Satisfaction'
   });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -278,6 +288,26 @@ export default function Home() {
                 {link.name}
               </a>
             ))}
+            {user ? (
+              <div className="flex items-center gap-6">
+                <Link to="/admin" className="text-sm font-semibold uppercase tracking-wider hover:text-brand-yellow transition-colors">
+                  Admin
+                </Link>
+                <button 
+                  onClick={logout}
+                  className="text-sm font-semibold uppercase tracking-wider hover:text-red-400 transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link 
+                to="/admin"
+                className="text-sm font-semibold uppercase tracking-wider hover:text-brand-yellow transition-colors"
+              >
+                Login
+              </Link>
+            )}
             <a 
               href="/#contact"
               className="bg-brand-yellow text-brand-dark px-6 py-2.5 font-display font-bold tracking-wider hover:bg-white transition-colors"
@@ -316,6 +346,34 @@ export default function Home() {
                   {link.name}
                 </a>
               ))}
+              {user ? (
+                <>
+                  <Link 
+                    to="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-brand-yellow text-lg font-display uppercase tracking-wider hover:text-white py-2 border-b border-gray-800"
+                  >
+                    Admin Dashboard
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-red-400 text-lg font-display uppercase tracking-wider hover:text-white py-2 text-left"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link 
+                  to="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-white text-lg font-display uppercase tracking-wider hover:text-brand-yellow py-2"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </motion.div>
         )}
